@@ -9,6 +9,8 @@ on:
 jobs:
   test-services:
     runs-on: ubuntu-latest
+    container:
+      image: lucasalt/act_base:latest
     services:
       mongodb:
         image: mongo
