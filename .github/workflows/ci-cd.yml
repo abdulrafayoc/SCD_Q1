@@ -46,8 +46,7 @@ jobs:
         MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
     
-    - name: Wait for services
-      run: apt-get update && apt-get install -y curl
+
     
     - name: Run API tests
       run: echo "API tests"
