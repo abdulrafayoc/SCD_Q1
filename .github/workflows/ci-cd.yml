@@ -33,7 +33,9 @@ jobs:
           cd "$service" && npm ci && cd ..
           echo "dependencies for $service installed"
         done
-      run: apt-get install docker-compose
+    
+    - name: Install docker-compose
+      run: apt-get install docker-compose -y
     
     - name: Install test dependencies
       run: echo "test dependencies installed"
