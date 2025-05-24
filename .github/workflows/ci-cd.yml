@@ -1,0 +1,58 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-services:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ 'i228762' }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    
+    - name: Install dependencies
+      run: |
+        cd "$GITHUB_WORKSPACE"
+        for service in "Auth Service" "Profile Service" "Blog Service" "Comment Service"; do
+          cd "$service" && npm ci && cd ..
+          echo "dependencies for $service installed"
+        done
+    
+    - name: Install test dependencies
+      run: |
+        npm install -g newman
+    
+    - name: Start services
+      run: |
+        docker-compose -f docker-compose.test.yml up -d
+      env:
+        MONGO_ROOT_USER: ${{ 'i228762' }}
+        MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+    
+    - name: Wait for services
+      run: |
+        apt-get update && apt-get install -y curl
+        ./scripts/wait-for-services.sh
+    
+    - name: Run API tests
+      run: |
+        newman run tests/api-tests.postman_collection.json --environment=tests/api-tests.postman_environment.json
+
+  
