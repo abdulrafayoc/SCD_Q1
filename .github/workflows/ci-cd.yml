@@ -19,10 +19,10 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v2
       with:
         node-version: '18'
     
@@ -38,15 +38,14 @@ jobs:
       run: echo "test dependencies installed"
     
     - name: Start services
-      run: docker-compose up -d
+      run: docker-compose up -d 
       env:
         MONGO_ROOT_USER: ${{ 'i228762' }}
         MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
     
     - name: Wait for services
-      run: |
-        apt-get update && apt-get install -y curl
+      run: apt-get update && apt-get install -y curl
     
     - name: Run API tests
       run: echo "API tests"
