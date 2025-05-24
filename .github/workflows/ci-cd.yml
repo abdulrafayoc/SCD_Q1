@@ -34,15 +34,11 @@ jobs:
           echo "dependencies for $service installed"
         done
     
-    - name: Install docker-compose
-      run: apt-get install docker-compose -y
-    
     - name: Install test dependencies
       run: echo "test dependencies installed"
     
     - name: Start services
-      run: |
-        docker-compose up -d
+      run: docker-compose up -d
       env:
         MONGO_ROOT_USER: ${{ 'i228762' }}
         MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
