@@ -32,8 +32,8 @@ jobs:
         for service in "Auth Service" "Profile Service" "Blog Service" "Comment Service"; do
           cd "$service" && npm ci && cd ..
           echo "dependencies for $service installed"
-        apt-get install docker-compose
         done
+      run: apt-get install docker-compose
     
     - name: Install test dependencies
       run: echo "test dependencies installed"
